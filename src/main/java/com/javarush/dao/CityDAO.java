@@ -15,13 +15,14 @@ public class CityDAO {
     }
 
     public List<City> getAllCities() {
-        try(Session session = sessionFactory.openSession()){
-            session.beginTransaction();
-            List<City> cities = session.createQuery("from City", City.class).list();
-            session.getTransaction().commit();
-            return cities;
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery(
+                    "select c from City c join fetch c.country",
+                    City.class
+            ).getResultList();
         }
     }
+
     public City getCityById(int id) {
         try(Session session = sessionFactory.openSession()){
             session.beginTransaction();

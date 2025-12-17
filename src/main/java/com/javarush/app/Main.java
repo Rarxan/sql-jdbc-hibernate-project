@@ -17,15 +17,20 @@ public class Main {
         CityDAO cityDAO = new CityDAO(sessionFactory);
         CountryDAO countryDAO = new CountryDAO(sessionFactory);
 
-        System.out.println("===Cities===");
-        List<City> cities = cityDAO.getAllCities();
-        cities.stream().limit(10).forEach(city ->
-                System.out.println(city.getId() + " " + city.getName()));
+        System.out.println("===Cities with countries===");
 
-        System.out.println("\n===Country===");
-        List<Country> countries = countryDAO.getAllCountries();
-        countries.stream().limit(10).forEach(country ->
-                System.out.println(country.getId() + " " + country.getName()));
+        List<City> cities = cityDAO.getAllCities();
+
+        cities.stream()
+                .limit(10)
+                .forEach(city -> {
+                    System.out.println(
+                            city.getName() +
+                                    " -> " +
+                                    city.getCountry().getName()
+                    );
+                });
+
 
         HibernateUtil.shutdown();
 
