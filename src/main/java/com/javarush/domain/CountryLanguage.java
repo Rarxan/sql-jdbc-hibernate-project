@@ -1,11 +1,6 @@
 package com.javarush.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import org.hibernate.annotations.Type;
 
@@ -33,6 +28,10 @@ public class CountryLanguage {
     @Column(name = "percentage")
     private BigDecimal percentage;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "country_id", insertable = false, updatable = false)
+    private Country country;
+
     public CountryLanguage() {
     }
 
@@ -54,5 +53,9 @@ public class CountryLanguage {
 
     public BigDecimal getPercentage() {
         return percentage;
+    }
+
+    public Country getCountry() {
+        return country;
     }
 }

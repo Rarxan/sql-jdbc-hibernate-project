@@ -1,13 +1,10 @@
 package com.javarush.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "country")
@@ -61,7 +58,13 @@ public class Country {
     private String headOfState;
 
     @Column(name = "capital")
-    private Integer capitalId;
+    private Integer capital;
+
+    @OneToMany(mappedBy = "country", fetch = FetchType.LAZY)
+    private List<City> cities = new ArrayList<City>();
+
+    @OneToMany(mappedBy = "country", fetch = FetchType.LAZY)
+    private List<CountryLanguage> languages = new ArrayList<>();
 
     public Country() {
     }
@@ -126,7 +129,15 @@ public class Country {
         return headOfState;
     }
 
-    public Integer getCapitalId() {
-        return capitalId;
+    public Integer getCapital() {
+        return capital;
+    }
+
+    public List<City> getCities() {
+        return cities;
+    }
+
+    public List<CountryLanguage> getLanguages() {
+        return languages;
     }
 }

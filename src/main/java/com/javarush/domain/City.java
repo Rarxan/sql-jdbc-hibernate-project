@@ -1,9 +1,6 @@
 package com.javarush.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "city")
@@ -25,6 +22,10 @@ public class City {
 
     @Column(name = "population")
     private Integer population;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "country_id", insertable = false, updatable = false)
+    private Country country;
 
     public City() {
 
@@ -48,5 +49,9 @@ public class City {
 
     public Integer getPopulation() {
         return population;
+    }
+
+    public Country getCountry() {
+        return country;
     }
 }
