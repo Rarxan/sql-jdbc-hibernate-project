@@ -1,5 +1,6 @@
 package com.javarush.app;
 
+import com.javarush.dao.CityDAO;
 import com.javarush.dao.CountryDAO;
 import com.javarush.hibernate.HibernateUtil;
 import org.hibernate.SessionFactory;
@@ -28,6 +29,19 @@ public class Main {
 
                     System.out.println();
                 });
+
+        CityDAO cityDAO = new CityDAO(sessionFactory);
+
+        cityDAO.getCitiesByCountryCode("USA")
+                .stream()
+                .limit(5)
+                .forEach(city ->
+                        System.out.println(
+                                city.getName() +
+                                        " -> " +
+                                        city.getCountry().getName()
+                        )
+                );
 
         HibernateUtil.shutdown();
     }
