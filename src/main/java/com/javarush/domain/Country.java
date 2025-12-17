@@ -1,10 +1,11 @@
 package com.javarush.domain;
 
 import jakarta.persistence.*;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 @Entity
 @Table(name = "country")
@@ -61,10 +62,10 @@ public class Country {
     private Integer capital;
 
     @OneToMany(mappedBy = "country", fetch = FetchType.LAZY)
-    private List<City> cities = new ArrayList<City>();
+    private Set<City> cities = new HashSet<>();
 
     @OneToMany(mappedBy = "country", fetch = FetchType.LAZY)
-    private List<CountryLanguage> languages = new ArrayList<>();
+    private Set<CountryLanguage> languages = new HashSet<>();
 
     public Country() {
     }
@@ -133,11 +134,11 @@ public class Country {
         return capital;
     }
 
-    public List<City> getCities() {
+    public Set<City> getCities() {
         return cities;
     }
 
-    public List<CountryLanguage> getLanguages() {
+    public Set<CountryLanguage> getLanguages() {
         return languages;
     }
 }

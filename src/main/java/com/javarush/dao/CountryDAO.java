@@ -23,4 +23,15 @@ public class CountryDAO {
             return countries;
         }
     }
+
+    public List<Country> getAllCountriesWithCitiesAndLanguages() {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery(
+                    "select distinct c from Country c " +
+                            "left join fetch c.cities " +
+                            "left join fetch c.languages",
+                    Country.class
+            ).getResultList();
+        }
+    }
 }

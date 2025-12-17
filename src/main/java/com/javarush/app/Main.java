@@ -1,6 +1,6 @@
 package com.javarush.app;
 
-import com.javarush.dao.CountryLanguageDAO;
+import com.javarush.dao.CountryDAO;
 import com.javarush.hibernate.HibernateUtil;
 import org.hibernate.SessionFactory;
 
@@ -8,21 +8,26 @@ public class Main {
     public static void main(String[] args) {
 
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        CountryLanguageDAO languageDAO = new CountryLanguageDAO(sessionFactory);
+        CountryDAO countryDAO = new CountryDAO(sessionFactory);
 
-        System.out.println("===Languages with countries===");
-
-        languageDAO.getAllLanguages()
+        countryDAO.getAllCountriesWithCitiesAndLanguages()
                 .stream()
-                .limit(10)
-                .forEach(lang ->
-                        System.out.println(
-                                lang.getLanguage() +
-                                        " -> " +
-                                        lang.getCountry().getName() +
-                                        " (official: " + lang.getIsOfficial() + ")"
-                        )
-                );
+                .limit(3)
+                .forEach(country -> {
+                    System.out.println("Country: " + country.getName());
+
+                    System.out.println(" Cities:");
+                    country.getCities().forEach(city ->
+                            System.out.println("  - " + city.getName())
+                    );
+
+                    System.out.println(" Languages:");
+                    country.getLanguages().forEach(lang ->
+                            System.out.println("  - " + lang.getLanguage())
+                    );
+
+                    System.out.println();
+                });
 
         HibernateUtil.shutdown();
     }
