@@ -3,6 +3,7 @@ package com.javarush.dao;
 import com.javarush.domain.CountryLanguage;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 import java.util.List;
 
@@ -23,14 +24,50 @@ public class CountryLanguageDAO {
         }
     }
 
-    public List<CountryLanguage> getLanguagesByCountryId(int countryId) {
+    public List<CountryLanguage> getLanguagesByCountryCode(String countryCode) {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery(
-                            "select cl from CountryLanguage cl join fetch cl.country where cl.country.id = :cid",
+                            "select cl from CountryLanguage cl join fetch cl.country c where c.code = :code",
                             CountryLanguage.class
                     )
-                    .setParameter("cid", countryId)
+                    .setParameter("code", countryCode)
                     .getResultList();
+        }
+    }
+
+    public void saveLanguage(CountryLanguage language) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            session.persist(language);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw e;
+        }
+    }
+
+    public void updateLanguage(CountryLanguage language) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            session.merge(language);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw e;
+        }
+    }
+
+    public void deleteLanguage(CountryLanguage language) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            session.remove(language);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw e;
         }
     }
 }
