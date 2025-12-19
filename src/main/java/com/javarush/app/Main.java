@@ -48,6 +48,11 @@ public class Main {
                 .forEach(language ->
                         System.out.println(language.getLanguage() + " -> " + language.getCountry().getName()));
 
+        System.out.println("=== Redis cache test ===");
+
+        System.out.println(countryService.getCountryByCode("USA").getName());
+        System.out.println(countryService.getCountryByCode("USA").getName());
+
         HibernateUtil.shutdown();
     }
 }
