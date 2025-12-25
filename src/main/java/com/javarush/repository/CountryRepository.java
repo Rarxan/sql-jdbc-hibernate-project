@@ -1,45 +1,56 @@
-package com.javarush.dao;
+package com.javarush.repository;
 
-import com.javarush.domain.CountryLanguage;
+import com.javarush.domain.Country;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-
 import java.util.List;
 
-public class CountryLanguageDAO {
+public class CountryDAO {
 
     private final SessionFactory sessionFactory;
 
-    public CountryLanguageDAO(SessionFactory sessionFactory) {
+    public CountryDAO(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
-    public List<CountryLanguage> getAllLanguages() {
+    public List<Country> getAllCountries() {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            List<Country> countries = session.createQuery("from Country", Country.class).list();
+            session.getTransaction().commit();
+            return countries;
+        }
+    }
+
+    public List<Country> getAllCountriesWithCitiesAndLanguages() {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery(
-                    "select cl from CountryLanguage cl join fetch cl.country",
-                    CountryLanguage.class
+                    "select distinct c from Country c " +
+                            "left join fetch c.cities " +
+                            "left join fetch c.languages",
+                    Country.class
             ).getResultList();
         }
     }
 
-    public List<CountryLanguage> getLanguagesByCountryCode(String countryCode) {
+    public Country getCountryByCode(String code) {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery(
-                            "select cl from CountryLanguage cl join fetch cl.country c where c.code = :code",
-                            CountryLanguage.class
-                    )
-                    .setParameter("code", countryCode)
-                    .getResultList();
+                    "select distinct c from Country c " +
+                            "left join fetch c.cities " +
+                            "left join fetch c.languages " +
+                            "where c.code = :code",
+                    Country.class
+            ).setParameter("code", code).uniqueResult();
         }
     }
 
-    public void saveLanguage(CountryLanguage language) {
+    public void saveCountry(Country country) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            session.persist(language);
+            session.persist(country);
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
@@ -47,11 +58,11 @@ public class CountryLanguageDAO {
         }
     }
 
-    public void updateLanguage(CountryLanguage language) {
+    public void updateCountry(Country country) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            session.merge(language);
+            session.merge(country);
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
@@ -59,11 +70,11 @@ public class CountryLanguageDAO {
         }
     }
 
-    public void deleteLanguage(CountryLanguage language) {
+    public void deleteCountry(Country country) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            session.remove(language);
+            session.remove(country);
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
