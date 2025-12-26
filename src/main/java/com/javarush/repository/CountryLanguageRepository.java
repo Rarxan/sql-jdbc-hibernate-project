@@ -7,11 +7,11 @@ import org.hibernate.Transaction;
 
 import java.util.List;
 
-public class CountryLanguageDAO {
+public class CountryLanguageRepository {
 
     private final SessionFactory sessionFactory;
 
-    public CountryLanguageDAO(SessionFactory sessionFactory) {
+    public CountryLanguageRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 

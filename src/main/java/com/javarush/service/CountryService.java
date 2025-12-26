@@ -1,6 +1,7 @@
 package com.javarush.service;
 
-import com.javarush.dao.CountryDAO;
+import com.javarush.exception.CountryNotFoundException;
+import com.javarush.repository.CountryRepository;
 import com.javarush.domain.Country;
 import com.javarush.redis.CountryCache;
 
@@ -8,25 +9,25 @@ import java.util.List;
 
 public class CountryService {
 
-    private final CountryDAO countryDAO;
+    private final CountryRepository countryRepository;
 
     private final CountryCache countryCache = new CountryCache();
 
-    public CountryService(CountryDAO countryDAO) {
-        this.countryDAO = countryDAO;
+    public CountryService(CountryRepository countryRepository) {
+        this.countryRepository = countryRepository;
     }
 
     public List<Country> getAllCountries() {
-        return countryDAO.getAllCountries();
+        return countryRepository.getAllCountries();
     }
 
     public List<Country> getAllCountriesWithCitiesAndLanguages() {
-        return countryDAO.getAllCountriesWithCitiesAndLanguages();
+        return countryRepository.getAllCountriesWithCitiesAndLanguages();
     }
 
     public Country getCountryByCode(String code) {
         if (code == null || code.isBlank()) {
-            throw new IllegalArgumentException("Country code must not be null or empty");
+            throw new CountryNotFoundException("Country code must not be null or empty");
         }
 
         Country cached = countryCache.get(code);
@@ -34,10 +35,11 @@ public class CountryService {
             return cached;
         }
 
-        Country country = countryDAO.getCountryByCode(code);
-        if (country != null) {
-            countryCache.put(code, country);
+        Country country = countryRepository.getCountryByCode(code);
+        if (country == null) {
+            throw  new CountryNotFoundException("Country with code " + code + " not found");
         }
+        countryCache.put(code, country);
         return country;
     }
 
@@ -45,20 +47,20 @@ public class CountryService {
         if (country == null) {
             throw new IllegalArgumentException("Country must not be null");
         }
-        countryDAO.saveCountry(country);
+        countryRepository.saveCountry(country);
     }
 
     public void updateCountry(Country country) {
         if (country == null) {
             throw new IllegalArgumentException("Country must not be null");
         }
-        countryDAO.updateCountry(country);
+        countryRepository.updateCountry(country);
     }
 
     public void deleteCountry(Country country) {
         if (country == null) {
             throw new IllegalArgumentException("Country must not be null");
         }
-        countryDAO.deleteCountry(country);
+        countryRepository.deleteCountry(country);
     }
 }

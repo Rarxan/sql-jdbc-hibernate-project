@@ -1,15 +1,17 @@
 package com.javarush.service;
 
-import com.javarush.dao.CountryLanguageDAO;
+import com.javarush.exception.CountryNotFoundException;
+import com.javarush.exception.LanguageNotFoundException;
+import com.javarush.repository.CountryLanguageRepository;
 import com.javarush.domain.CountryLanguage;
 
 import java.util.List;
 
 public class CountryLanguageService {
 
-    private final CountryLanguageDAO languageDAO;
+    private final CountryLanguageRepository languageDAO;
 
-    public CountryLanguageService(CountryLanguageDAO languageDAO) {
+    public CountryLanguageService(CountryLanguageRepository languageDAO) {
         this.languageDAO = languageDAO;
     }
 
@@ -19,9 +21,13 @@ public class CountryLanguageService {
 
     public List<CountryLanguage> getLanguagesByCountryCode(String countryCode) {
         if (countryCode == null || countryCode.isBlank()) {
-            throw new IllegalArgumentException("Country code cannot be null or empty.");
+            throw new LanguageNotFoundException("Country code cannot be null or empty.");
         }
-        return languageDAO.getLanguagesByCountryCode(countryCode);
+        List<CountryLanguage> languages = languageDAO.getLanguagesByCountryCode(countryCode);
+        if (languages.isEmpty()) {
+            throw new CountryNotFoundException("No languages found for country code: " + countryCode);
+        }
+        return languages;
     }
 
     public void saveLanguage(CountryLanguage language) {

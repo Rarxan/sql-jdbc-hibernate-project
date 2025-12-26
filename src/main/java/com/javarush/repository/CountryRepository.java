@@ -6,11 +6,11 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import java.util.List;
 
-public class CountryDAO {
+public class CountryRepository {
 
     private final SessionFactory sessionFactory;
 
-    public CountryDAO(SessionFactory sessionFactory) {
+    public CountryRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
