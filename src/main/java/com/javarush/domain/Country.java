@@ -141,4 +141,16 @@ public class Country {
     public Set<CountryLanguage> getLanguages() {
         return languages;
     }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
 }

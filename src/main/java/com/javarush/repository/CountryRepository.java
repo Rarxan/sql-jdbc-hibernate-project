@@ -6,7 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import java.util.List;
 
-public class CountryRepository {
+public class CountryRepository{
 
     private final SessionFactory sessionFactory;
 
