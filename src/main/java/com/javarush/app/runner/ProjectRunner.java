@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 public class ProjectRunner {
 
     private static final Logger log = LoggerFactory.getLogger(ProjectRunner.class);
-
     private static final String DEFAULT_COUNTRY_CODE = "USA";
 
     private final CountryService countryService;
@@ -32,7 +31,7 @@ public class ProjectRunner {
         this.languageService = languageService;
     }
 
-    public static void start() {
+    public static void run() {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 
         ProjectRunner runner = new ProjectRunner(
@@ -41,12 +40,12 @@ public class ProjectRunner {
                 new CountryLanguageService(new CountryLanguageRepository(sessionFactory))
         );
 
-        runner.run();
+        runner.startLogic();
 
         HibernateUtil.shutdown();
     }
 
-    private void run() {
+    private void startLogic() {
         log.info("=== First 10 countries with cities and languages ===");
 
         countryService.getAllCountriesWithCitiesAndLanguages()

@@ -4,11 +4,14 @@ import com.javarush.domain.City;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class CityRepository {
 
+    private static final Logger log = LoggerFactory.getLogger(CityRepository.class);
     private final SessionFactory sessionFactory;
 
     public CityRepository(SessionFactory sessionFactory) {
@@ -53,6 +56,7 @@ public class CityRepository {
             transaction.commit();
         } catch (Exception ex) {
             if (transaction != null) transaction.rollback();
+            log.error("Failed to save city", ex);
             throw ex;
         }
     }
